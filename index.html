@@ -3,7 +3,7 @@
 <head> 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GMS · Transparência de Motoristas</title>
+<title>GMS · Transparência TRANSPORTE </title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -216,7 +216,7 @@ footer p{font-size:10px;color:var(--muted)}
 
 <!-- TELA DE CARREGAMENTO -->
 <div id="loadingScreen">
-  <div class="load-ico">🚐</div>
+  <div class="load-ico">🚐MARCIO🚐</div>
   <div class="load-txt">CARREGANDO DADOS</div>
   <div class="load-sub">Buscando planilha em tempo real...</div>
 </div>
@@ -252,8 +252,9 @@ footer p{font-size:10px;color:var(--muted)}
 
 <!-- ABAS DE NAVEGAÇÃO -->
 <div class="tabs">
+   <button class="tab-btn" id="tabEscala" onclick="switchTab('escala')">📅 Escala do Dia</button>
   <button class="tab-btn active" id="tabEstatisticas" onclick="switchTab('estatisticas')">📊 Estatísticas</button>
-  <button class="tab-btn" id="tabEscala" onclick="switchTab('escala')">📅 Escala do Dia</button>
+
 </div>
 
 <!-- ── TAB ESTATÍSTICAS ── -->
@@ -267,7 +268,7 @@ footer p{font-size:10px;color:var(--muted)}
     <div class="filter-group"><label>Veículo</label><div class="chips" id="fVei"></div></div>
     <div class="filter-group" style="align-self:end">
       <label>Resultado filtrado</label>
-      <div id="fResult" style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:var(--accent)">-- <span style="font-size:13px;color:var(--muted);font-family:'Barlow',sans-serif;font-weight:400">viagens</span></div>
+      <div id="fResult" style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:var(--accent)">-- <span style="font-size:13px;color:var(--muted);font-family:'Barlow',sans-serif;font-weight:400">VIAGENS</span></div>
     </div>
   </div>
 </div>
@@ -325,7 +326,7 @@ footer p{font-size:10px;color:var(--muted)}
 </div>
 
 <div class="card" style="margin-bottom:14px">
-  <div class="card-hd"><h3>📄 LOG DE VIAGENS FILTRADAS</h3><span id="logSub">--</span></div>
+  <div class="card-hd"><h3>📄 REGISTRO DE VIAGENS FILTRADAS</h3><span id="logSub">--</span></div>
   <div class="log-wrap"><table class="log"><thead><tr><th>Data</th><th>Motorista</th><th>Destino</th><th>Veículo</th><th>Mês</th><th>Semana</th></tr></thead><tbody id="logTbody"></tbody></table></div>
 </div>
 
@@ -338,7 +339,7 @@ footer p{font-size:10px;color:var(--muted)}
       <div class="escala-titulo">📅 ESCALA DO DIA</div>
       <div class="escala-sub">Viagens de hoje e próximas · atualiza automaticamente com a planilha</div>
     </div>
-    <div id="escalaInfo" style="font-size:11px;color:var(--muted)"></div>
+    <div id="escalaInfo" style="font-size:12px;color:var(--muted)"></div>
   </div>
   <div class="escala-kpis">
     <div class="escala-kpi ck0"><div class="escala-kpi-val" id="ekTotal">--</div><div class="escala-kpi-lbl">Viagens Hoje</div></div>
@@ -348,8 +349,8 @@ footer p{font-size:10px;color:var(--muted)}
   </div>
   <div class="card">
     <div class="card-hd">
-      <h3>🗓️ ESCALA DE VIAGENS</h3>
-      <span id="escalaCount" style="color:var(--muted);font-size:10px">--</span>
+      <h4>🗓️ ESCALA DE VIAGENS</h4>
+      <span id="escalaCount" style="color:var(--muted);font-size:12px">--</span>
     </div>
     <div style="overflow-x:auto">
       <table id="escalaTable">
@@ -365,7 +366,7 @@ footer p{font-size:10px;color:var(--muted)}
           </tr>
         </thead>
         <tbody id="escalaTbody">
-          <tr><td colspan="7" style="padding:40px;text-align:center;color:var(--muted)">⏳ Carregando...</td></tr>
+          <tr><td colspan="7" style="padding:45px;text-align:center;color:var(--muted)">⏳ Carregando...</td></tr>
         </tbody>
       </table>
     </div>
