@@ -172,7 +172,7 @@ footer p{font-size:10px;color:var(--muted)}
 /* ── ESCALA DO DIA ── */
 .escala-header{background:var(--s1);border:1px solid var(--border);border-left:4px solid var(--gold);border-radius:10px;padding:16px 22px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
 .escala-titulo{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;color:var(--gold);letter-spacing:2px}
-.escala-sub{font-size:11px;color:var(--muted);margin-top:3px}
+.escala-sub{font-size:13px;color:var(--muted);margin-top:3px}
 .escala-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
 .escala-kpi{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:12px 14px;text-align:center;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04)}
 .escala-kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
@@ -184,8 +184,8 @@ footer p{font-size:10px;color:var(--muted)}
 .escala-kpi-lbl{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
 /* Tabela escala */
 #escalaTable{width:100%;border-collapse:collapse;min-width:600px}
-#escalaTable th{padding:9px 14px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);text-align:left;background:var(--s2);font-weight:700;white-space:nowrap;border-bottom:1px solid var(--border)}
-#escalaTable td{padding:10px 14px;font-size:12px;border-bottom:1px solid var(--s3);vertical-align:middle;color:var(--text)}
+#escalaTable th{padding:9px 14px;font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);text-align:left;background:var(--s2);font-weight:700;white-space:nowrap;border-bottom:1px solid var(--border)}
+#escalaTable td{padding:10px 14px;font-size:13px;border-bottom:1px solid var(--s3);vertical-align:middle;color:var(--text)}
 #escalaTable tr:last-child td{border-bottom:none}
 #escalaTable tbody tr:hover td{background:var(--s2)}
 #escalaTable tr.row-hoje td{background:#f0faf6}
@@ -252,8 +252,8 @@ footer p{font-size:10px;color:var(--muted)}
 
 <!-- ABAS DE NAVEGAÇÃO -->
 <div class="tabs">
-   <button class="tab-btn" id="tabEscala" onclick="switchTab('escala')">📅 Escala do Dia</button>
   <button class="tab-btn active" id="tabEstatisticas" onclick="switchTab('estatisticas')">📊 Estatísticas</button>
+   <button class="tab-btn" id="tabEscala" onclick="switchTab('escala')">📅 Escala do Dia</button>
 
 </div>
 
@@ -350,7 +350,7 @@ footer p{font-size:10px;color:var(--muted)}
   <div class="card">
     <div class="card-hd">
       <h4>🗓️ ESCALA DE VIAGENS</h4>
-      <span id="escalaCount" style="color:var(--muted);font-size:12px">--</span>
+      <span id="escalaCount" style="color:var(--muted);font-size:14px">--</span>
     </div>
     <div style="overflow-x:auto">
       <table id="escalaTable">
