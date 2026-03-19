@@ -434,8 +434,10 @@ function parseCSV(text) {
     if (veiculo.startsWith("-") || veiculo==="VEICULO" || veiculo==="VEICULOS / MOTORISTAS") continue;
 
     const saida=(p[3]||"").trim(), pac=(p[4]||"").trim(), obs=(p[5]||"").trim();
-    const data=(p[6]||"").trim(), ok=(p[7]||"").trim().toUpperCase(), mes=(p[8]||"").toUpperCase();
+    let data=(p[6]||"").trim(); const ok=(p[7]||"").trim().toUpperCase(), mes=(p[8]||"").toUpperCase();
     if (!data || !data.includes("/")) continue;
+    // Normaliza ano de 2 dígitos: "20/03/26" → "20/03/2026"
+    const _dp=data.split("/"); if(_dp.length===3&&_dp[2].length===2) data=_dp[0]+"/"+_dp[1]+"/20"+_dp[2];
 
     let day=1, wk="Sem 1", mesFinal=mes||"?";
     try{
