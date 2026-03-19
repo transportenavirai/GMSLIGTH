@@ -387,7 +387,7 @@ const REFRESH_MS = 60 * 1000;
 const RETRY_MS   = 10 * 1000;
 const MAX_RETRY  = 5;
 const SKIP     = new Set(["FERIAS","RECESSO","RURAL","HEMODIALISE","MALOTE","DISPONIVEL","TRANSITO","TRÂNSITO","CANCELADA"]); 
-const SKIP_KPI = new Set(["RURAL","HEMODIALISE","MALOTE","DISPONIVEL","TRANSITO","TRÂNSITO"]);
+const SKIP_KPI = new Set(["RURAL","HEMODIALISE","MALOTE","DISPONIVEL","TRANSITO","TRÂNSITO","FERIAS","RECESSO","CANCELADA"]);
 const COLORS = ["#0a7c55","#1a5fa8","#b07800","#7a3fa8","#c0283e","#0e7a8a","#5a7a20","#a05800","#1a6fa8","#0a6644","#884020","#3a5fa8"];
 
 // ── ESTADO ───────────────────────────────────────────────────────────
@@ -638,10 +638,14 @@ function renderEscala() {
     return rDate >= hoje;
   });
 
-  // Viagens reais (excluindo DISPONIVEL, TRANSITO etc) em todos os dias futuros
+  // Viagens reais (excluindo DISPONIVEL, TRANSITO, FERIAS etc) em todos os dias futuros
   const ativas = rows.filter(function(r) {
     const du = r.d.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
-    for (const s of SKIP_KPI) { if (du.includes(s)) return false; } return true;
+    for (const s of SKIP_KPI) {
+      const sn = s.normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+      if (du.includes(sn)) return false;
+    }
+    return true;
   });
 
   // Próxima data com viagens pendentes (pode ser hoje ou o próximo dia)
@@ -652,7 +656,11 @@ function renderEscala() {
   const rowsHoje = rows.filter(function(r) { return r.dt === proximaData; });
   const ativasHoje = rowsHoje.filter(function(r) {
     const du = r.d.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
-    for (const s of SKIP_KPI) { if (du.includes(s)) return false; } return true;
+    for (const s of SKIP_KPI) {
+      const sn = s.normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+      if (du.includes(sn)) return false;
+    }
+    return true;
   });
   const pacHoje = ativasHoje.reduce(function(s,r){ return s+(parseInt(r.pac)||0); }, 0);
 
