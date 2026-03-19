@@ -3,7 +3,7 @@
 <head> 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GMS · Transparência TRANSPORTE </title>
+<title>GMS · Transparência de Motoristas</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -172,7 +172,7 @@ footer p{font-size:10px;color:var(--muted)}
 /* ── ESCALA DO DIA ── */
 .escala-header{background:var(--s1);border:1px solid var(--border);border-left:4px solid var(--gold);border-radius:10px;padding:16px 22px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
 .escala-titulo{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;color:var(--gold);letter-spacing:2px}
-.escala-sub{font-size:13px;color:var(--muted);margin-top:3px}
+.escala-sub{font-size:11px;color:var(--muted);margin-top:3px}
 .escala-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
 .escala-kpi{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:12px 14px;text-align:center;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04)}
 .escala-kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
@@ -184,8 +184,8 @@ footer p{font-size:10px;color:var(--muted)}
 .escala-kpi-lbl{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
 /* Tabela escala */
 #escalaTable{width:100%;border-collapse:collapse;min-width:600px}
-#escalaTable th{padding:9px 14px;font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);text-align:left;background:var(--s2);font-weight:700;white-space:nowrap;border-bottom:1px solid var(--border)}
-#escalaTable td{padding:10px 14px;font-size:13px;border-bottom:1px solid var(--s3);vertical-align:middle;color:var(--text)}
+#escalaTable th{padding:9px 14px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);text-align:left;background:var(--s2);font-weight:700;white-space:nowrap;border-bottom:1px solid var(--border)}
+#escalaTable td{padding:10px 14px;font-size:12px;border-bottom:1px solid var(--s3);vertical-align:middle;color:var(--text)}
 #escalaTable tr:last-child td{border-bottom:none}
 #escalaTable tbody tr:hover td{background:var(--s2)}
 #escalaTable tr.row-hoje td{background:#f0faf6}
@@ -216,7 +216,7 @@ footer p{font-size:10px;color:var(--muted)}
 
 <!-- TELA DE CARREGAMENTO -->
 <div id="loadingScreen">
-  <div class="load-ico">🚐MARCIO🚐</div>
+  <div class="load-ico">🚐</div>
   <div class="load-txt">CARREGANDO DADOS</div>
   <div class="load-sub">Buscando planilha em tempo real...</div>
 </div>
@@ -253,8 +253,7 @@ footer p{font-size:10px;color:var(--muted)}
 <!-- ABAS DE NAVEGAÇÃO -->
 <div class="tabs">
   <button class="tab-btn active" id="tabEstatisticas" onclick="switchTab('estatisticas')">📊 Estatísticas</button>
-   <button class="tab-btn" id="tabEscala" onclick="switchTab('escala')">📅 Escala do Dia</button>
-
+  <button class="tab-btn" id="tabEscala" onclick="switchTab('escala')">📅 Escala do Dia</button>
 </div>
 
 <!-- ── TAB ESTATÍSTICAS ── -->
@@ -268,7 +267,7 @@ footer p{font-size:10px;color:var(--muted)}
     <div class="filter-group"><label>Veículo</label><div class="chips" id="fVei"></div></div>
     <div class="filter-group" style="align-self:end">
       <label>Resultado filtrado</label>
-      <div id="fResult" style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:var(--accent)">-- <span style="font-size:13px;color:var(--muted);font-family:'Barlow',sans-serif;font-weight:400">VIAGENS</span></div>
+      <div id="fResult" style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:var(--accent)">-- <span style="font-size:13px;color:var(--muted);font-family:'Barlow',sans-serif;font-weight:400">viagens</span></div>
     </div>
   </div>
 </div>
@@ -326,7 +325,7 @@ footer p{font-size:10px;color:var(--muted)}
 </div>
 
 <div class="card" style="margin-bottom:14px">
-  <div class="card-hd"><h3>📄 REGISTRO DE VIAGENS FILTRADAS</h3><span id="logSub">--</span></div>
+  <div class="card-hd"><h3>📄 LOG DE VIAGENS FILTRADAS</h3><span id="logSub">--</span></div>
   <div class="log-wrap"><table class="log"><thead><tr><th>Data</th><th>Motorista</th><th>Destino</th><th>Veículo</th><th>Mês</th><th>Semana</th></tr></thead><tbody id="logTbody"></tbody></table></div>
 </div>
 
@@ -339,18 +338,18 @@ footer p{font-size:10px;color:var(--muted)}
       <div class="escala-titulo">📅 ESCALA DO DIA</div>
       <div class="escala-sub">Viagens de hoje e próximas · atualiza automaticamente com a planilha</div>
     </div>
-    <div id="escalaInfo" style="font-size:12px;color:var(--muted)"></div>
+    <div id="escalaInfo" style="font-size:11px;color:var(--muted)"></div>
   </div>
   <div class="escala-kpis">
-    <div class="escala-kpi ck0"><div class="escala-kpi-val" id="ekTotal">--</div><div class="escala-kpi-lbl">Viagens Hoje</div></div>
+    <div class="escala-kpi ck0"><div class="escala-kpi-val" id="ekTotal">--</div><div class="escala-kpi-lbl">Motoristas</div></div>
     <div class="escala-kpi ck1"><div class="escala-kpi-val" id="ekAtivos">--</div><div class="escala-kpi-lbl">Em Serviço</div></div>
-    <div class="escala-kpi ck2"><div class="escala-kpi-val" id="ekDest">--</div><div class="escala-kpi-lbl">Destinos</div></div>
-    <div class="escala-kpi ck3"><div class="escala-kpi-val" id="ekPac">--</div><div class="escala-kpi-lbl">Pacientes</div></div>
+    <div class="escala-kpi ck2"><div class="escala-kpi-val" id="ekDest">--</div><div class="escala-kpi-lbl">Viagens Hoje</div></div>
+    <div class="escala-kpi ck3"><div class="escala-kpi-val" id="ekPac">--</div><div class="escala-kpi-lbl">Pacientes Hoje</div></div>
   </div>
   <div class="card">
     <div class="card-hd">
-      <h4>🗓️ ESCALA DE VIAGENS</h4>
-      <span id="escalaCount" style="color:var(--muted);font-size:14px">--</span>
+      <h3>🗓️ ESCALA DE VIAGENS</h3>
+      <span id="escalaCount" style="color:var(--muted);font-size:10px">--</span>
     </div>
     <div style="overflow-x:auto">
       <table id="escalaTable">
@@ -366,7 +365,7 @@ footer p{font-size:10px;color:var(--muted)}
           </tr>
         </thead>
         <tbody id="escalaTbody">
-          <tr><td colspan="7" style="padding:45px;text-align:center;color:var(--muted)">⏳ Carregando...</td></tr>
+          <tr><td colspan="7" style="padding:40px;text-align:center;color:var(--muted)">⏳ Carregando...</td></tr>
         </tbody>
       </table>
     </div>
@@ -637,17 +636,27 @@ function renderEscala() {
     return rDate >= hoje;
   });
 
-  const ativas   = rows.filter(function(r) {
+  // Viagens reais (excluindo DISPONIVEL, TRANSITO etc) em todos os dias futuros
+  const ativas = rows.filter(function(r) {
     const du = r.d.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
     for (const s of SKIP_KPI) { if (du.includes(s)) return false; } return true;
   });
-  const totalPac = ativas.reduce(function(s,r){ return s+(parseInt(r.pac)||0); }, 0);
-  const destinos = new Set(ativas.map(function(r){ return r.d; })).size;
 
-  document.getElementById("ekTotal").textContent  = rows.length   || "--";
-  document.getElementById("ekAtivos").textContent = ativas.length || "--";
-  document.getElementById("ekDest").textContent   = destinos      || "--";
-  document.getElementById("ekPac").textContent    = totalPac      || "--";
+  // Apenas o dia de hoje
+  const rowsHoje = rows.filter(function(r) { return r.dt === hojeStr; });
+  const ativasHoje = rowsHoje.filter(function(r) {
+    const du = r.d.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+    for (const s of SKIP_KPI) { if (du.includes(s)) return false; } return true;
+  });
+  const pacHoje = ativasHoje.reduce(function(s,r){ return s+(parseInt(r.pac)||0); }, 0);
+
+  // Motoristas únicos em toda a escala futura
+  const motoristas = new Set(rows.map(function(r){ return r.m; })).size;
+
+  document.getElementById("ekTotal").textContent  = motoristas       || "--";
+  document.getElementById("ekAtivos").textContent = ativas.length    || "--";
+  document.getElementById("ekDest").textContent   = ativasHoje.length|| "--";
+  document.getElementById("ekPac").textContent    = pacHoje          || "--";
   document.getElementById("escalaCount").textContent = rows.length + " viagem" + (rows.length!==1?"s":"") + " · a partir de " + hojeStr;
   document.getElementById("escalaInfo").textContent  = "Atualizado às " + new Date().toLocaleTimeString("pt-BR");
 
