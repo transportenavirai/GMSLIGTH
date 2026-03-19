@@ -343,7 +343,7 @@ footer p{font-size:10px;color:var(--muted)}
   <div class="escala-kpis">
     <div class="escala-kpi ck0"><div class="escala-kpi-val" id="ekTotal">--</div><div class="escala-kpi-lbl">Motoristas</div></div>
     <div class="escala-kpi ck1"><div class="escala-kpi-val" id="ekAtivos">--</div><div class="escala-kpi-lbl">Em Serviço</div></div>
-    <div class="escala-kpi ck2"><div class="escala-kpi-val" id="ekDest">--</div><div class="escala-kpi-lbl">Viagens Hoje</div></div>
+    <div class="escala-kpi ck2"><div class="escala-kpi-val" id="ekDest">--</div><div class="escala-kpi-lbl">Viagens a Realizar</div></div>
     <div class="escala-kpi ck3"><div class="escala-kpi-val" id="ekPac">--</div><div class="escala-kpi-lbl">Pacientes Hoje</div></div>
   </div>
   <div class="card">
@@ -642,8 +642,12 @@ function renderEscala() {
     for (const s of SKIP_KPI) { if (du.includes(s)) return false; } return true;
   });
 
-  // Apenas o dia de hoje
-  const rowsHoje = rows.filter(function(r) { return r.dt === hojeStr; });
+  // Próxima data com viagens pendentes (pode ser hoje ou o próximo dia)
+  const datasOrdenadas = [...new Set(rows.map(function(r){ return r.dt; }))].sort(function(a,b){
+    return a.split("/").reverse().join("").localeCompare(b.split("/").reverse().join(""));
+  });
+  const proximaData = datasOrdenadas[0] || hojeStr;
+  const rowsHoje = rows.filter(function(r) { return r.dt === proximaData; });
   const ativasHoje = rowsHoje.filter(function(r) {
     const du = r.d.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
     for (const s of SKIP_KPI) { if (du.includes(s)) return false; } return true;
