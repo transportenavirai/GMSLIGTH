@@ -962,39 +962,44 @@ function renderEscala() {
     return rDate >= hoje;
   });
 
-  // "Em Serviço" exclui apenas dispensas (férias, disponível, cancelada)
-  const ativas = rows.filter(r => {
-    const du = norm(r.d);
-    for (const s of SKIP_SERVICO) { if (du.includes(norm(s))) return false; }
-    return true;
-  });
-
-  // MELHORIA 4: KPIs focam na próxima data com viagens, com labels dinâmicos
+  // Proxima data com viagens pendentes
   const datasOrdenadas = [...new Set(rows.map(r => r.dt))].sort((a,b) =>
     a.split("/").reverse().join("").localeCompare(b.split("/").reverse().join(""))
   );
   const proximaData = datasOrdenadas[0] || hojeStr;
   const isProximaHoje = proximaData === hojeStr;
-
   const rowsProxima = rows.filter(r => r.dt === proximaData);
-  const ativasProxima = rowsProxima.filter(r => {
+
+  // "Em Servico" = motoristas UNICOS na proxima data excluindo dispensas
+  // Conta motoristas, nao linhas — evita mostrar valor maior que total de motoristas
+  const ativasServico = rowsProxima.filter(r => {
+    const du = norm(r.d);
+    for (const s of SKIP_SERVICO) { if (du.includes(norm(s))) return false; }
+    return true;
+  });
+  const motoristasEmServico = new Set(ativasServico.map(r => r.m)).size;
+
+  // Viagens e pacientes da proxima data (exclui rural/hemo/malote/etc)
+  const viagensProxima = rowsProxima.filter(r => {
     const du = norm(r.d);
     for (const s of SKIP_KPI) { if (du.includes(norm(s))) return false; }
     return true;
   });
-  const pacProxima = ativasProxima.reduce((s, r) => s + (parseInt(r.pac) || 0), 0);
+  const pacProxima = viagensProxima.reduce((s, r) => s + (parseInt(r.pac) || 0), 0);
+
+  // Total de motoristas unicos com qualquer viagem pendente no periodo
   const motoristas = new Set(rows.map(r => r.m)).size;
 
-  // Labels dinâmicos baseados em se é hoje ou data futura
+  // Labels dinamicos
   const labelViagens = isProximaHoje ? "Viagens Hoje" : `Viagens ${proximaData}`;
   const labelPac     = isProximaHoje ? "Pacientes Hoje" : `Pacientes ${proximaData}`;
   document.getElementById("ekDestLbl").textContent = labelViagens;
   document.getElementById("ekPacLbl").textContent  = labelPac;
 
-  document.getElementById("ekTotal").textContent  = motoristas           || "--";
-  document.getElementById("ekAtivos").textContent = ativas.length        || "--";
-  document.getElementById("ekDest").textContent   = ativasProxima.length || "--";
-  document.getElementById("ekPac").textContent    = pacProxima           || "--";
+  document.getElementById("ekTotal").textContent  = motoristas             || "--";
+  document.getElementById("ekAtivos").textContent = motoristasEmServico    || "--";
+  document.getElementById("ekDest").textContent   = viagensProxima.length  || "--";
+  document.getElementById("ekPac").textContent    = pacProxima             || "--";
   document.getElementById("escalaCount").textContent =
     rows.length + " viagem" + (rows.length !== 1 ? "s" : "") + " · a partir de " + hojeStr;
   document.getElementById("escalaInfo").textContent =
