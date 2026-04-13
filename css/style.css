@@ -53,7 +53,7 @@ body {
   transition: opacity .5s;
 }
 #loadingScreen.hidden { opacity: 0; pointer-events: none; }
-.load-ico { font-size: 50px; animation: spin .5s linear infinite; }
+.load-ico { font-size: 46px; animation: spin .5s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .load-txt { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: 2px; color: var(--accent); }
 .load-sub { font-size: 12px; color: var(--muted); }
