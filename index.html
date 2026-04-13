@@ -1,268 +1,22 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GMS · Transparência de Motoristas</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#f0f4f8;
-  --s1:#ffffff;
-  --s2:#f5f8fb;
-  --s3:#e8eef4;
-  --border:#d0dae6;
-  --text:#1a2535;
-  --muted:#6b84a0;
-  --accent:#0a7c55;
-  --gold:#b07800;
-  --green:#0a7c55;
-  --red:#c0283e;
-  --purple:#5a3fa8;
-}
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh;overflow-x:hidden}
-.page{position:relative;z-index:1;padding:20px 24px;max-width:1600px;margin:0 auto}
-
-/* ── HEADER ── */
-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:2px solid var(--border)}
-.brand{display:flex;align-items:center;gap:14px}
-.brand-ico{background:var(--accent);border-radius:12px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
-.brand-text h1{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;letter-spacing:3px;color:var(--text)}
-.brand-text p{font-size:11px;color:var(--muted);margin-top:2px}
-.hdr-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.tag{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.5px;display:inline-flex;align-items:center;gap:6px}
-.tag-live{background:#e6f9f2;border:1px solid #9adfc5;color:var(--green)}
-.tag-off{background:#fdf5e0;border:1px solid #e8c96a;color:var(--gold)}
-.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:blink 2s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-.btn{background:var(--s1);border:1px solid var(--border);color:var(--muted);padding:5px 14px;border-radius:20px;font-size:11px;font-family:'Barlow',sans-serif;cursor:pointer;transition:all .2s}
-.btn:hover{border-color:var(--accent);color:var(--accent)}
-.btn-export{background:#e6f9f2;border:1px solid #9adfc5;color:var(--green)}
-.btn-export:hover{background:#d0f5e8;border-color:var(--green)}
-
-/* ── LOADING / ERRO ── */
-#loadingScreen{position:fixed;inset:0;background:var(--bg);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;transition:opacity .5s}
-#loadingScreen.hidden{opacity:0;pointer-events:none}
-.load-ico{font-size:48px;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.load-txt{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;letter-spacing:2px;color:var(--accent)}
-.load-sub{font-size:12px;color:var(--muted)}
-#errorScreen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:16px;text-align:center}
-#errorScreen h2{font-family:'Barlow Condensed',sans-serif;font-size:28px;color:var(--red)}
-#errorScreen p{color:var(--muted);font-size:13px;max-width:400px;line-height:1.6}
-
-/* ── BANNER ── */
-#banner{display:none;align-items:center;gap:10px;background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:9px 16px;margin-bottom:14px;font-size:12px;flex-wrap:wrap}
-
-/* ── FILTROS ── */
-.filters-wrap{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:14px 18px;margin-bottom:16px}
-.filters-title{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:10px}
-.filters-grid{display:grid;grid-template-columns:auto auto auto auto 1fr;gap:18px;align-items:start}
-.filter-group label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);display:block;margin-bottom:5px}
-.chips{display:flex;flex-wrap:wrap;gap:4px}
-.chip{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;background:var(--s2);border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap;font-family:'Barlow',sans-serif}
-.chip:hover{border-color:var(--accent);color:var(--accent)}
-.chip.on{background:#e6f9f2;border-color:var(--accent);color:var(--accent)}
-.chip.on-gold{background:#fdf5e0;border-color:var(--gold);color:var(--gold)}
-.chip.on-purple{background:#f0ecff;border-color:var(--purple);color:var(--purple)}
-
-/* ── EQUIDADE BANNER ── */
-.eq-banner{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;background:var(--s1);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:16px 22px;margin-bottom:16px}
-.eq-left h2{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:1px;color:var(--accent);margin-bottom:3px}
-.eq-left p{font-size:11px;color:var(--muted);line-height:1.5}
-.eq-score{font-family:'Barlow Condensed',sans-serif;font-size:56px;font-weight:900;line-height:1;color:var(--accent);text-align:center}
-.eq-score-sub{font-size:10px;color:var(--muted);margin-top:2px;text-align:center}
-.eq-score.na{font-size:28px;color:var(--muted)}
-
-/* ── KPIS ── */
-.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:11px;margin-bottom:16px}
-.kpi{background:var(--s1);border:1px solid var(--border);border-radius:11px;padding:14px 16px;position:relative;overflow:hidden;transition:box-shadow .2s;box-shadow:0 1px 4px rgba(0,0,0,.04)}
-.kpi:hover{box-shadow:0 4px 16px rgba(0,0,0,.1)}
-.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
-.kpi.c0::before{background:var(--accent)}.kpi.c1::before{background:#0e8a60}.kpi.c2::before{background:var(--gold)}.kpi.c3::before{background:var(--purple)}.kpi.c4::before{background:var(--red)}
-.kpi-ico{font-size:16px;margin-bottom:6px;opacity:.7}.kpi-lbl{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:4px}
-.kpi-val{font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:800;line-height:1;margin-bottom:2px}
-.kpi.c0 .kpi-val{color:var(--accent)}.kpi.c1 .kpi-val{color:#0e8a60}.kpi.c2 .kpi-val{color:var(--gold)}.kpi.c3 .kpi-val{color:var(--purple)}.kpi.c4 .kpi-val{color:var(--red)}
-.kpi-sub{font-size:10px;color:var(--muted)}
-
-/* ── CARDS / LAYOUT ── */
-.row2{display:grid;grid-template-columns:1fr 300px;gap:14px;margin-bottom:14px}
-.row3{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-.card{background:var(--s1);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04)}
-.card-hd{padding:11px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--s2)}
-.card-hd h3{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;color:var(--text)}
-.card-hd span{font-size:10px;color:var(--muted)}
-
-/* ── TABELA RANKING ── */
-table.dt{width:100%;border-collapse:collapse}
-table.dt th{padding:8px 13px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);text-align:left;background:var(--s2);font-weight:700;border-bottom:1px solid var(--border)}
-table.dt td{padding:10px 13px;font-size:12px;border-bottom:1px solid var(--s3);color:var(--text)}
-table.dt tr:last-child td{border:none}
-table.dt tbody tr:hover td{background:var(--s2)}
-.av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:10px;flex-shrink:0}
-.drv-info{display:flex;align-items:center;gap:8px}
-.drv-name{font-weight:600;font-size:12px}.drv-sub{font-size:9px;color:var(--muted);margin-top:1px}
-.n-big{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800}
-.bar-row{display:flex;align-items:center;gap:6px;min-width:90px}
-.bar-bg{flex:1;height:5px;background:var(--s3);border-radius:3px;overflow:hidden}
-.bar-fill{height:100%;border-radius:3px;transition:width .8s cubic-bezier(.4,0,.2,1)}
-.bar-pct{font-size:9px;color:var(--muted);min-width:28px;text-align:right}
-.bdg{display:inline-flex;align-items:center;padding:1px 7px;border-radius:20px;font-size:9px;font-weight:700}
-.bdg-g{background:#e6f9f2;color:var(--green);border:1px solid #9adfc5}
-.bdg-y{background:#fdf5e0;color:var(--gold);border:1px solid #e8c96a}
-.bdg-r{background:#fff0f2;color:var(--red);border:1px solid #f0aab5}
-
-/* ── DONUT ── */
-.donut-wrap{display:flex;flex-direction:column;align-items:center;padding:14px 12px 10px}
-.donut-rel{position:relative;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
-svg.dn{transform:rotate(-90deg)}
-.dn-center{position:absolute;text-align:center;font-family:'Barlow Condensed',sans-serif}
-.dn-num{font-size:28px;font-weight:800;color:var(--text);line-height:1}.dn-lbl{font-size:9px;color:var(--muted);margin-top:1px}
-.legend{display:flex;flex-direction:column;gap:5px;width:100%}
-.leg-item{display:flex;align-items:center;justify-content:space-between}
-.leg-l{display:flex;align-items:center;gap:6px}.leg-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0}
-.leg-n{font-size:10px;color:var(--text)}.leg-r{display:flex;align-items:center;gap:5px}
-.leg-pct{font-size:10px;font-weight:700}.leg-t{font-size:9px;color:var(--muted)}
-
-/* ── EQUIDADE GRID ── */
-.eq-sec{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
-.eq-sec-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.eq-sec-hd h3{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;color:var(--text)}
-.eq-sec-hd span{font-size:10px;color:var(--muted)}
-.eq-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}
-.eq-card{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:10px 7px;text-align:center;transition:box-shadow .2s;cursor:default}
-.eq-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.1)}
-.eq-av{width:32px;height:32px;border-radius:50%;margin:0 auto 5px;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:11px}
-.eq-trips{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;line-height:1;margin-bottom:1px}
-.eq-name{font-size:9px;color:var(--muted);margin-bottom:2px}.eq-diff{font-size:9px;font-weight:700}
-.up{color:var(--green)}.dn{color:var(--red)}.eq{color:var(--muted)}
-
-/* ── HEATMAP ── */
-.heat-wrap{padding:10px 14px;overflow-x:auto}
-.heat-hdr{display:flex;gap:3px;padding-left:80px;margin-bottom:3px}
-.heat-hdr span{width:24px;font-size:8px;color:var(--muted);text-align:center;flex-shrink:0;overflow:hidden}
-.heat-row{display:flex;align-items:center;gap:3px;margin-bottom:2px}
-.heat-lbl{font-size:9px;color:var(--muted);width:76px;flex-shrink:0;text-align:right;padding-right:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.heat-cell{width:24px;height:24px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#fff;cursor:default;transition:transform .15s;flex-shrink:0}
-.heat-cell:hover{transform:scale(1.4);z-index:10;position:relative}
-
-/* ── SEMANAL ── */
-.wchart-wrap{padding:10px 14px}
-.wchart-bars{display:flex;align-items:flex-end;gap:6px;height:120px;margin-bottom:6px}
-.wchart-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
-.wchart-group{display:flex;gap:2px;align-items:flex-end;width:100%}
-.wchart-bar{flex:1;border-radius:3px 3px 0 0;min-height:2px;cursor:pointer;transition:opacity .15s}
-.wchart-bar:hover{opacity:.65}
-.wchart-lbl{font-size:8px;color:var(--muted)}
-.wchart-legend{display:flex;flex-wrap:wrap;gap:6px;padding-top:8px;border-top:1px solid var(--border)}
-.wleg{display:flex;align-items:center;gap:4px;font-size:9px;color:var(--muted)}.wleg-dot{width:6px;height:6px;border-radius:2px}
-
-/* ── DEST/VEI ── */
-table.dest{width:100%;border-collapse:collapse}
-table.dest th{padding:8px 13px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);text-align:left;background:var(--s2);font-weight:700;border-bottom:1px solid var(--border)}
-table.dest td{padding:9px 13px;font-size:12px;border-bottom:1px solid var(--s3);color:var(--text)}
-table.dest tr:last-child td{border:none}
-table.dest tbody tr:hover td{background:var(--s2)}
-.dest-name{font-weight:600}.dest-who{font-size:9px;color:var(--muted);margin-top:1px}
-
-/* ── LOG ── */
-.log-toolbar{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--s2)}
-.log-search{flex:1;border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:11px;font-family:'Barlow',sans-serif;background:var(--s1);color:var(--text);outline:none;transition:border-color .2s}
-.log-search:focus{border-color:var(--accent)}
-.log-search::placeholder{color:var(--muted)}
-.log-wrap{max-height:300px;overflow-y:auto}
-table.log{width:100%;border-collapse:collapse}
-table.log th{padding:7px 12px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);text-align:left;background:var(--s2);position:sticky;top:0;z-index:1;font-weight:700;border-bottom:1px solid var(--border)}
-table.log td{padding:8px 12px;font-size:11px;border-bottom:1px solid var(--s3);color:var(--text)}
-table.log tr:last-child td{border:none}
-table.log tbody tr:hover td{background:var(--s2)}
-
-/* ── FOOTER / MISC ── */
-footer{border-top:1px solid var(--border);padding:12px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-top:18px}
-footer p{font-size:10px;color:var(--muted)}
-.empty{padding:30px;text-align:center;color:var(--muted);font-size:12px}
-#tip{position:fixed;background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:11px;pointer-events:none;z-index:9999;display:none;box-shadow:0 4px 16px rgba(0,0,0,.15);line-height:1.6;color:var(--text)}
-
-/* ── ABAS ── */
-.tabs{display:flex;gap:0;margin-bottom:18px;border-bottom:2px solid var(--border)}
-.tab-btn{padding:12px 24px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:1px;color:var(--muted);cursor:pointer;border:none;background:none;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s}
-.tab-btn:hover{color:var(--text)}.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
-.tab-panel{display:none}.tab-panel.active{display:block}
-
-/* ── ESCALA DO DIA ── */
-.escala-header{background:var(--s1);border:1px solid var(--border);border-left:4px solid var(--gold);border-radius:10px;padding:16px 22px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
-.escala-titulo{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;color:var(--gold);letter-spacing:2px}
-.escala-sub{font-size:11px;color:var(--muted);margin-top:3px}
-.escala-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
-.escala-kpi{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:12px 14px;text-align:center;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04)}
-.escala-kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
-.escala-kpi.ck0::before{background:var(--gold)}.escala-kpi.ck1::before{background:var(--green)}
-.escala-kpi.ck2::before{background:#1a5fa8}.escala-kpi.ck3::before{background:var(--purple)}
-.escala-kpi-val{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:800;line-height:1;margin-bottom:3px}
-.escala-kpi.ck0 .escala-kpi-val{color:var(--gold)}.escala-kpi.ck1 .escala-kpi-val{color:var(--green)}
-.escala-kpi.ck2 .escala-kpi-val{color:#1a5fa8}.escala-kpi.ck3 .escala-kpi-val{color:var(--purple)}
-.escala-kpi-lbl{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
-#escalaTable{width:100%;border-collapse:collapse;min-width:600px}
-#escalaTable th{padding:9px 14px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);text-align:left;background:var(--s2);font-weight:700;white-space:nowrap;border-bottom:1px solid var(--border)}
-#escalaTable td{padding:10px 14px;font-size:12px;border-bottom:1px solid var(--s3);vertical-align:middle;color:var(--text)}
-#escalaTable tr:last-child td{border-bottom:none}
-#escalaTable tbody tr:hover td{background:var(--s2)}
-#escalaTable tr.row-hoje td{background:#f0faf6}
-#escalaTable tr.row-hoje:hover td{background:#e6f5ee}
-#escalaTable tr.row-sep td{background:var(--s3);padding:7px 14px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;color:var(--muted);border-bottom:1px solid var(--border)}
-.mot-cell{display:flex;align-items:center;gap:8px}
-.mot-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:11px;flex-shrink:0}
-.mot-nome{font-weight:700;font-size:12px}
-.saida-val{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;color:var(--green)}
-.pac-val{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:#1a5fa8}
-.dest-val{font-weight:600;color:var(--text)}
-.dest-ferias{color:var(--muted);font-style:italic}
-.dest-rural{color:#3a7a3a}
-.dest-hemo{color:#1a5fa8}
-.dest-malote{color:var(--muted)}
-.dest-disp{color:var(--muted);font-style:italic}
-.vei-badge{font-size:10px;font-weight:700;color:var(--muted);background:var(--s2);border:1px solid var(--border);padding:2px 7px;border-radius:4px;white-space:nowrap}
-.obs-val{font-size:10px;color:var(--gold);font-weight:600}
-.escala-data{color:var(--green);font-weight:700;font-size:11px}
-
-/* ── RESPONSIVO ── */
-@media(max-width:1100px){
-  .escala-kpis{grid-template-columns:repeat(2,1fr)}
-  .row2,.row3{grid-template-columns:1fr}
-  .kpis{grid-template-columns:repeat(3,1fr)}
-  .eq-grid{grid-template-columns:repeat(4,1fr)}
-  .filters-grid{grid-template-columns:1fr 1fr}
-}
-@media(max-width:600px){
-  .kpis{grid-template-columns:repeat(2,1fr)}
-  .eq-grid{grid-template-columns:repeat(3,1fr)}
-  .page{padding:12px}
-  .tab-btn{font-size:14px;padding:10px 14px}
-}
-
-/* ── IMPRESSÃO ── */
-@media print{
-  body{background:#fff;color:#000}
-  #loadingScreen,#banner,.btn,.btn-export,.hdr-right,.log-toolbar,#tip,.tabs,.tab-btn{display:none!important}
-  .tab-panel{display:block!important}
-  .card,.kpi,.eq-sec,.eq-banner,.filters-wrap{box-shadow:none;border:1px solid #ccc;break-inside:avoid}
-  .page{padding:10px;max-width:100%}
-  .row2,.row3{grid-template-columns:1fr 1fr}
-  .kpis{grid-template-columns:repeat(5,1fr)}
-  footer{border-top:1px solid #ccc}
-  .log-wrap{max-height:none;overflow:visible}
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GMS · Transparência de Motoristas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/TESTE/css/style.css">
 </head>
 <body>
 
+<!-- ══ TELA DE CARREGAMENTO ══ -->
 <div id="loadingScreen">
   <div class="load-ico">🚐</div>
   <div class="load-txt">CARREGANDO DADOS</div>
   <div class="load-sub">Buscando planilha em tempo real...</div>
 </div>
 
+<!-- ══ TELA DE ERRO ══ -->
 <div id="errorScreen">
   <div style="font-size:48px">⚠️</div>
   <h2>Não foi possível carregar</h2>
@@ -270,827 +24,217 @@ footer p{font-size:10px;color:var(--muted)}
   <button class="btn" id="btnRetryErr" style="margin-top:8px;font-size:13px;padding:8px 20px">⟳ Tentar novamente</button>
 </div>
 
+<!-- ══ CONTEÚDO PRINCIPAL ══ -->
 <div id="mainContent" style="display:none">
 <div class="page">
 
-<header>
-  <div class="brand">
-    <div class="brand-ico">🚐</div>
-    <div class="brand-text">
-      <h1>GMS · PAINEL DE TRANSPARÊNCIA</h1>
-      <p>Marcio Castro · Prefeitura de Naviraí</p>
-    </div>
-  </div>
-  <div class="hdr-right">
-    <span class="tag tag-live" id="statusTag"><span class="live-dot"></span>TEMPO REAL</span>
-    <button class="btn" id="btnResetFilters">✕ Limpar filtros</button>
-    <button class="btn btn-export" id="btnExportCSV">📥 Exportar CSV</button>
-    <button class="btn" onclick="window.print()">🖨️ Imprimir</button>
-    <button class="btn" id="btnRefresh">⟳ Atualizar</button>
-  </div>
-</header>
-
-<div id="banner"></div>
-
-<div class="tabs">
-  <button class="tab-btn active" id="tabEstatisticas">📊 Estatísticas</button>
-  <button class="tab-btn" id="tabEscala">📅 Escala do Dia</button>
-</div>
-
-<!-- ── TAB ESTATÍSTICAS ── -->
-<div class="tab-panel active" id="panelEstatisticas">
-
-<div class="filters-wrap">
-  <div class="filters-title">🔍 Filtros interativos — clique para selecionar</div>
-  <div class="filters-grid">
-    <div class="filter-group"><label>Mês</label><div class="chips" id="fMes"></div></div>
-    <div class="filter-group"><label>Semana</label><div class="chips" id="fSem"></div></div>
-    <div class="filter-group"><label>Motorista</label><div class="chips" id="fMot"></div></div>
-    <div class="filter-group"><label>Veículo</label><div class="chips" id="fVei"></div></div>
-    <div class="filter-group" style="align-self:end">
-      <label>Resultado filtrado</label>
-      <div id="fResult" style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:var(--accent)">-- <span style="font-size:13px;color:var(--muted);font-family:'Barlow',sans-serif;font-weight:400">viagens</span></div>
-    </div>
-  </div>
-</div>
-
-<div class="eq-banner">
-  <div class="eq-left">
-    <h2>⚖️ ÍNDICE DE EQUIDADE</h2>
-    <p>Variação entre motoristas no período filtrado. <strong style="color:var(--gold)">Não conta: Rural, Hemodiálise, Malote, Disponível, Trânsito.</strong></p>
-  </div>
-  <div><div class="eq-score" id="eqScore">--</div><div class="eq-score-sub" id="eqScoreSub">/ 100</div></div>
-</div>
-
-<div class="kpis">
-  <div class="kpi c0"><div class="kpi-ico">🚐</div><div class="kpi-lbl">Total de Viagens</div><div class="kpi-val" id="kT">--</div><div class="kpi-sub" id="kP">--</div></div>
-  <div class="kpi c1"><div class="kpi-ico">👤</div><div class="kpi-lbl">Média / Motorista</div><div class="kpi-val" id="kA">--</div><div class="kpi-sub">viagens/pessoa</div></div>
-  <div class="kpi c2"><div class="kpi-ico">📍</div><div class="kpi-lbl">Destinos</div><div class="kpi-val" id="kD">--</div><div class="kpi-sub">rotas diferentes</div></div>
-  <div class="kpi c3"><div class="kpi-ico">🏆</div><div class="kpi-lbl">Mais Viagens</div><div class="kpi-val" id="kTop">--</div><div class="kpi-sub" id="kTopN">--</div></div>
-  <div class="kpi c4"><div class="kpi-ico">📊</div><div class="kpi-lbl">Variação Máxima</div><div class="kpi-val" id="kV">--</div><div class="kpi-sub">entre motoristas</div></div>
-</div>
-
-<div class="row2">
-  <div class="card">
-    <div class="card-hd"><h3>📋 RANKING POR MOTORISTA</h3><span id="tblSub">--</span></div>
-    <table class="dt"><thead><tr><th>#</th><th>Motorista</th><th>Viagens</th><th>Participação</th><th>Destino Principal</th><th>Veículo Principal</th><th>vs Média</th></tr></thead><tbody id="drvTbody"></tbody></table>
-  </div>
-  <div class="card">
-    <div class="card-hd"><h3>🥧 DISTRIBUIÇÃO</h3><span>% por motorista</span></div>
-    <div class="donut-wrap">
-      <div class="donut-rel">
-        <svg class="dn" width="140" height="140" viewBox="0 0 140 140" id="donutSvg"></svg>
-        <div class="dn-center"><div class="dn-num" id="donutN">--</div><div class="dn-lbl">viagens</div></div>
+  <!-- ── CABEÇALHO ── -->
+  <header>
+    <div class="brand">
+      <div class="brand-ico">🚐</div>
+      <div class="brand-text">
+        <h1>GMS · PAINEL DE TRANSPARÊNCIA</h1>
+        <p>Marcio Castro · Prefeitura de Naviraí</p>
       </div>
-      <div class="legend" id="donutLeg"></div>
     </div>
-  </div>
-</div>
-
-<div class="eq-sec">
-  <div class="eq-sec-hd"><h3>⚖️ EQUIDADE INDIVIDUAL</h3><span>🟢 acima · 🔴 abaixo · média = <span id="avgLbl">--</span> viagens</span></div>
-  <div class="eq-grid" id="eqGrid"></div>
-</div>
-
-<div class="row3">
-  <div class="card"><div class="card-hd"><h3>🔥 MAPA DE CALOR · MOTORISTA × DESTINO</h3><span>nº viagens</span></div><div class="heat-wrap" id="heatWrap"></div></div>
-  <div class="card"><div class="card-hd"><h3>📈 EVOLUÇÃO SEMANAL</h3><span>viagens/semana</span></div>
-    <div class="wchart-wrap"><div class="wchart-bars" id="wChart"></div><div class="wchart-legend" id="wLeg"></div></div>
-  </div>
-</div>
-
-<div class="row3">
-  <div class="card"><div class="card-hd"><h3>📍 VIAGENS POR DESTINO</h3><span id="destSub">--</span></div>
-    <table class="dest"><thead><tr><th>Destino</th><th>Total</th><th>Distribuição</th><th>Motoristas</th></tr></thead><tbody id="destTbody"></tbody></table></div>
-  <div class="card"><div class="card-hd"><h3>🚗 VIAGENS POR VEÍCULO</h3><span id="veiSub">--</span></div>
-    <table class="dest"><thead><tr><th>Veículo</th><th>Total</th><th>Distribuição</th><th>Motoristas</th></tr></thead><tbody id="veiTbody"></tbody></table></div>
-</div>
-
-<div class="card" style="margin-bottom:14px">
-  <div class="card-hd">
-    <h3>📄 LOG DE VIAGENS FILTRADAS</h3>
-    <span id="logSub">--</span>
-  </div>
-  <div class="log-toolbar">
-    <input class="log-search" id="logSearch" type="text" placeholder="🔍  Buscar por motorista, destino, veículo...">
-    <button class="btn btn-export" id="btnExportLog" style="white-space:nowrap;font-size:10px;padding:4px 10px">📥 Exportar filtrado</button>
-  </div>
-  <div class="log-wrap">
-    <table class="log">
-      <thead><tr><th>Data</th><th>Motorista</th><th>Destino</th><th>Veículo</th><th>Mês</th><th>Semana</th></tr></thead>
-      <tbody id="logTbody"></tbody>
-    </table>
-  </div>
-</div>
-
-</div><!-- fim panelEstatisticas -->
-
-<!-- ── TAB ESCALA DO DIA ── -->
-<div class="tab-panel" id="panelEscala">
-  <div class="escala-header">
-    <div>
-      <div class="escala-titulo">📅 ESCALA DO DIA</div>
-      <div class="escala-sub">Viagens de hoje e próximas · atualiza automaticamente com a planilha</div>
+    <div class="hdr-right">
+      <span class="tag tag-live" id="statusTag"><span class="live-dot"></span>TEMPO REAL</span>
+      <button class="btn" id="btnResetFilters">✕ Limpar filtros</button>
+      <button class="btn btn-export" id="btnExportCSV">📥 Exportar CSV</button>
+      <button class="btn" onclick="window.print()">🖨️ Imprimir</button>
+      <button class="btn" id="btnRefresh">⟳ Atualizar</button>
     </div>
-    <div id="escalaInfo" style="font-size:11px;color:var(--muted)"></div>
-  </div>
-  <div class="escala-kpis">
-    <div class="escala-kpi ck0"><div class="escala-kpi-val" id="ekTotal">--</div><div class="escala-kpi-lbl">Motoristas</div></div>
-    <div class="escala-kpi ck1"><div class="escala-kpi-val" id="ekAtivos">--</div><div class="escala-kpi-lbl">Em Serviço</div></div>
-    <div class="escala-kpi ck2"><div class="escala-kpi-val" id="ekDest">--</div><div class="escala-kpi-lbl" id="ekDestLbl">Viagens</div></div>
-    <div class="escala-kpi ck3"><div class="escala-kpi-val" id="ekPac">--</div><div class="escala-kpi-lbl" id="ekPacLbl">Pacientes</div></div>
-  </div>
-  <div class="card">
-    <div class="card-hd">
-      <h3>🗓️ ESCALA DE VIAGENS</h3>
-      <span id="escalaCount" style="color:var(--muted);font-size:10px">--</span>
-    </div>
-    <div style="overflow-x:auto">
-      <table id="escalaTable">
-        <thead>
-          <tr>
-            <th>Data</th><th>Motorista</th><th>Veículo</th><th>Destino</th><th>Saída</th><th>Pacientes</th><th>Obs</th>
-          </tr>
-        </thead>
-        <tbody id="escalaTbody">
-          <tr><td colspan="7" style="padding:40px;text-align:center;color:var(--muted)">⏳ Carregando...</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div><!-- fim panelEscala -->
+  </header>
 
-<footer>
-  <p>🔒 Painel 100% transparente · GMS · Prefeitura de Naviraí · Marcio Castro</p>
-  <p id="tsLbl"></p>
-</footer>
+  <div id="banner"></div>
+
+  <!-- ── ABAS ── -->
+  <div class="tabs">
+    <button class="tab-btn active" id="tabEstatisticas">📊 Estatísticas</button>
+    <button class="tab-btn"        id="tabEscala">📅 Escala do Dia</button>
+  </div>
+
+  <!-- ══ ABA: ESTATÍSTICAS ══ -->
+  <div class="tab-panel active" id="panelEstatisticas">
+
+    <!-- Filtros -->
+    <div class="filters-wrap">
+      <div class="filters-title">🔍 Filtros interativos — clique para selecionar</div>
+      <div class="filters-grid">
+        <div class="filter-group"><label>Mês</label><div class="chips" id="fMes"></div></div>
+        <div class="filter-group"><label>Semana</label><div class="chips" id="fSem"></div></div>
+        <div class="filter-group"><label>Motorista</label><div class="chips" id="fMot"></div></div>
+        <div class="filter-group"><label>Veículo</label><div class="chips" id="fVei"></div></div>
+        <div class="filter-group" style="align-self:end">
+          <label>Resultado filtrado</label>
+          <div id="fResult" style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:var(--accent)">
+            -- <span style="font-size:13px;color:var(--muted);font-family:'Barlow',sans-serif;font-weight:400">viagens</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Equidade -->
+    <div class="eq-banner">
+      <div class="eq-left">
+        <h2>⚖️ ÍNDICE DE EQUIDADE</h2>
+        <p>Variação entre motoristas no período filtrado.
+           <strong style="color:var(--gold)">Não conta: Rural, Hemodiálise, Malote, Disponível, Trânsito.</strong>
+        </p>
+      </div>
+      <div>
+        <div class="eq-score" id="eqScore">--</div>
+        <div class="eq-score-sub" id="eqScoreSub">/ 100</div>
+      </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpis">
+      <div class="kpi c0"><div class="kpi-ico">🚐</div><div class="kpi-lbl">Total de Viagens</div><div class="kpi-val" id="kT">--</div><div class="kpi-sub" id="kP">--</div></div>
+      <div class="kpi c1"><div class="kpi-ico">👤</div><div class="kpi-lbl">Média / Motorista</div><div class="kpi-val" id="kA">--</div><div class="kpi-sub">viagens/pessoa</div></div>
+      <div class="kpi c2"><div class="kpi-ico">📍</div><div class="kpi-lbl">Destinos</div><div class="kpi-val" id="kD">--</div><div class="kpi-sub">rotas diferentes</div></div>
+      <div class="kpi c3"><div class="kpi-ico">🏆</div><div class="kpi-lbl">Mais Viagens</div><div class="kpi-val" id="kTop">--</div><div class="kpi-sub" id="kTopN">--</div></div>
+      <div class="kpi c4"><div class="kpi-ico">📊</div><div class="kpi-lbl">Variação Máxima</div><div class="kpi-val" id="kV">--</div><div class="kpi-sub">entre motoristas</div></div>
+    </div>
+
+    <!-- Ranking + Donut -->
+    <div class="row2">
+      <div class="card">
+        <div class="card-hd"><h3>📋 RANKING POR MOTORISTA</h3><span id="tblSub">--</span></div>
+        <table class="dt">
+          <thead><tr><th>#</th><th>Motorista</th><th>Viagens</th><th>Participação</th><th>Destino Principal</th><th>Veículo Principal</th><th>vs Média</th></tr></thead>
+          <tbody id="drvTbody"></tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-hd"><h3>🥧 DISTRIBUIÇÃO</h3><span>% por motorista</span></div>
+        <div class="donut-wrap">
+          <div class="donut-rel">
+            <svg class="dn" width="140" height="140" viewBox="0 0 140 140" id="donutSvg"></svg>
+            <div class="dn-center"><div class="dn-num" id="donutN">--</div><div class="dn-lbl">viagens</div></div>
+          </div>
+          <div class="legend" id="donutLeg"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Equidade individual -->
+    <div class="eq-sec">
+      <div class="eq-sec-hd">
+        <h3>⚖️ EQUIDADE INDIVIDUAL</h3>
+        <span>🟢 acima · 🔴 abaixo · média = <span id="avgLbl">--</span> viagens</span>
+      </div>
+      <div class="eq-grid" id="eqGrid"></div>
+    </div>
+
+    <!-- Heatmap + Semanal -->
+    <div class="row3">
+      <div class="card">
+        <div class="card-hd"><h3>🔥 MAPA DE CALOR · MOTORISTA × DESTINO</h3><span>nº viagens</span></div>
+        <div class="heat-wrap" id="heatWrap"></div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><h3>📈 EVOLUÇÃO SEMANAL</h3><span>viagens/semana</span></div>
+        <div class="wchart-wrap">
+          <div class="wchart-bars" id="wChart"></div>
+          <div class="wchart-legend" id="wLeg"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Destinos + Veículos -->
+    <div class="row3">
+      <div class="card">
+        <div class="card-hd"><h3>📍 VIAGENS POR DESTINO</h3><span id="destSub">--</span></div>
+        <table class="dest">
+          <thead><tr><th>Destino</th><th>Total</th><th>Distribuição</th><th>Motoristas</th></tr></thead>
+          <tbody id="destTbody"></tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-hd"><h3>🚗 VIAGENS POR VEÍCULO</h3><span id="veiSub">--</span></div>
+        <table class="dest">
+          <thead><tr><th>Veículo</th><th>Total</th><th>Distribuição</th><th>Motoristas</th></tr></thead>
+          <tbody id="veiTbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Log -->
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-hd">
+        <h3>📄 LOG DE VIAGENS FILTRADAS</h3>
+        <span id="logSub">--</span>
+      </div>
+      <div class="log-toolbar">
+        <input class="log-search" id="logSearch" type="text" placeholder="🔍  Buscar por motorista, destino, veículo...">
+        <button class="btn btn-export" id="btnExportLog" style="white-space:nowrap;font-size:10px;padding:4px 10px">📥 Exportar filtrado</button>
+      </div>
+      <div class="log-wrap">
+        <table class="log">
+          <thead><tr><th>Data</th><th>Motorista</th><th>Destino</th><th>Veículo</th><th>Mês</th><th>Semana</th></tr></thead>
+          <tbody id="logTbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- fim panelEstatisticas -->
+
+  <!-- ══ ABA: ESCALA DO DIA ══ -->
+  <div class="tab-panel" id="panelEscala">
+
+    <div class="escala-header">
+      <div>
+        <div class="escala-titulo">📅 ESCALA DO DIA</div>
+        <div class="escala-sub">Viagens de hoje e próximas · atualiza automaticamente com a planilha</div>
+      </div>
+      <div id="escalaInfo" style="font-size:11px;color:var(--muted)"></div>
+    </div>
+
+    <!-- KPIs da escala -->
+    <div class="escala-kpis">
+      <div class="escala-kpi ck0"><div class="escala-kpi-val" id="ekTotal">--</div><div class="escala-kpi-lbl">Motoristas</div></div>
+      <div class="escala-kpi ck1"><div class="escala-kpi-val" id="ekAtivos">--</div><div class="escala-kpi-lbl">Em Serviço</div></div>
+      <div class="escala-kpi ck2"><div class="escala-kpi-val" id="ekDest">--</div><div class="escala-kpi-lbl" id="ekDestLbl">Viagens</div></div>
+      <div class="escala-kpi ck3"><div class="escala-kpi-val" id="ekPac">--</div><div class="escala-kpi-lbl" id="ekPacLbl">Pacientes</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-hd">
+        <h3>🗓️ ESCALA DE VIAGENS</h3>
+        <span id="escalaCount" style="color:var(--muted);font-size:10px">--</span>
+      </div>
+      <div style="overflow-x:auto">
+        <table id="escalaTable">
+          <thead>
+            <tr>
+              <th>Data</th><th>Motorista</th><th>Veículo</th>
+              <th>Destino</th><th>Saída</th><th>Pacientes</th><th>Obs</th>
+            </tr>
+          </thead>
+          <tbody id="escalaTbody">
+            <tr><td colspan="7" style="padding:40px;text-align:center;color:var(--muted)">⏳ Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- fim panelEscala -->
+
+  <!-- ── RODAPÉ ── -->
+  <footer>
+    <p>🔒 Painel 100% transparente · GMS · Prefeitura de Naviraí · Marcio Castro</p>
+    <p id="tsLbl"></p>
+  </footer>
+
 </div>
-</div>
+</div><!-- fim mainContent -->
+
+<!-- Tooltip global -->
 <div id="tip"></div>
 
-<script>
-// ── CONFIG ───────────────────────────────────────────────────────────────────
-const CSV_URL    = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQI6auY_9xHSJGEj2yjUXBCGyx3K9acP3qRApIm6EqTuXw6rtd6BArAH12OAJx8HtRqvpbDsiawgbc2/pub?gid=936830313&single=true&output=csv";
-const REFRESH_MS = 60 * 1000;
-const RETRY_MS   = 10 * 1000;
-const MAX_RETRY  = 5;
-
-// Destinos excluídos das estatísticas de equidade
-const SKIP = new Set(["FERIAS","RECESSO","RURAL","HEMODIALISE","MALOTE","DISPONIVEL","TRANSITO","TRÂNSITO","CANCELADA"]);
-// Excluídos dos KPIs gerais da escala (tudo que não é viagem real)
-const SKIP_KPI = new Set(["RURAL","HEMODIALISE","MALOTE","DISPONIVEL","TRANSITO","TRÂNSITO","FERIAS","RECESSO","CANCELADA"]);
-// Excluídos apenas do contador "Em Serviço" (dispensas/afastamentos)
-const SKIP_SERVICO = new Set(["DISPONIVEL","FERIAS","RECESSO","CANCELADA","TRANSITO","TRÂNSITO"]);
-
-const COLORS = ["#0a7c55","#1a5fa8","#b07800","#7a3fa8","#c0283e","#0e7a8a","#5a7a20","#a05800","#1a6fa8","#0a6644","#884020","#3a5fa8"];
-
-// ── ESTADO ───────────────────────────────────────────────────────────────────
-let ALL_ROWS = [], ESCALA_ROWS = [], MOT_COLORS = {};
-let selMes = new Set(), selSem = new Set(), selMot = new Set(), selVei = new Set();
-let logRows = []; // cache das linhas do log para busca/export
-let retryCount = 0, cdTimer = null, fetchTimer = null, nextAt = null, firstLoad = true;
-
-// ── UTILIDADES ───────────────────────────────────────────────────────────────
-function esc(s) {
-  return String(s)
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;')
-    .replace(/'/g,'&#39;');
-}
-function norm(s) {
-  return String(s).toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
-}
-function initials(n) {
-  const p = n.split(" ");
-  return p.length >= 2 ? p[0][0] + p[1][0] : n.substring(0,2);
-}
-
-// ── PARSE CSV ────────────────────────────────────────────────────────────────
-function parseCSV(text) {
-  const mNames = ["","JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET","OUT","NOV","DEZ"];
-  const stats = [];
-  const escala = [];
-
-  for (const line of text.split(/\r?\n/)) {
-    const p = [];
-    let cur = "", inQ = false;
-    for (let ci = 0; ci < line.length; ci++) {
-      const ch = line[ci];
-      if (ch === '"') { inQ = !inQ; }
-      else if (ch === ',' && !inQ) { p.push(cur.trim()); cur = ""; }
-      else { cur += ch; }
-    }
-    p.push(cur.trim());
-    if (p.length < 3) continue;
-
-    const veiculo   = (p[0] || "").toUpperCase();
-    const motorista = (p[1] || "").toUpperCase();
-    const destino   = (p[2] || "").toUpperCase();
-
-    // Filtros de cabeçalho / linhas inválidas
-    if (!motorista || motorista === "MOTORISTA" || motorista.startsWith("-")) continue;
-    if (/^[0-9]{1,2}\/[0-9]{1,2}/.test(motorista)) continue;
-    if (!destino || destino === "DESTINO" || destino.startsWith("-")) continue;
-
-    // MELHORIA 1: veículo opcional para férias/recesso/disponível,
-    // mas a segunda guarda só corre quando o veículo EXISTE e é inválido
-    const isVeiOpcional = destino.includes("FERIAS") || destino.includes("RECESSO") || destino.includes("DISPONIVEL");
-    if (!isVeiOpcional) {
-      if (!veiculo || veiculo === "VEICULO" || veiculo === "VEICULOS / MOTORISTAS") continue;
-    }
-    // Veículo inválido mesmo existindo (cabeçalho residual)
-    if (veiculo === "VEICULO" || veiculo === "VEICULOS / MOTORISTAS") continue;
-
-    const saida = (p[3] || "").trim();
-    const pac   = (p[4] || "").trim();
-    const obs   = (p[5] || "").trim();
-    let   data  = (p[6] || "").trim();
-    const ok    = (p[7] || "").trim().toUpperCase();
-    const mes   = (p[8] || "").toUpperCase();
-
-    if (!data || !data.includes("/")) continue;
-
-    // MELHORIA BÔNUS: normaliza ano de 2 dígitos (ex: 20/03/26 → 20/03/2026)
-    const dpNorm = data.split("/");
-    if (dpNorm.length === 3 && dpNorm[2].length === 2) {
-      data = dpNorm[0] + "/" + dpNorm[1] + "/20" + dpNorm[2];
-    }
-
-    let day = 1, wk = "Sem 1", mesFinal = mes || "?";
-    try {
-      const dp = data.split("/");
-      day = parseInt(dp[0]) || 1;
-      wk = "Sem " + Math.min(5, Math.floor((day - 1) / 7) + 1);
-      if (!mes || mes === "?") {
-        const mn = parseInt(dp[1]) || 0;
-        if (mn >= 1 && mn <= 12) mesFinal = mNames[mn];
-      }
-    } catch(e) {}
-
-    const row = { v: veiculo, m: motorista, d: destino, dt: data,
-                  mes: mesFinal, day, wk, ok: ok === "OK" ? "OK" : "",
-                  saida, pac, obs };
-
-    // Escala: tudo exceto viagens já confirmadas
-    if (ok !== "OK") escala.push(row);
-
-    // Estatísticas: exclui categorias especiais, inclui OK (histórico completo)
-    let skip = false;
-    for (const s of SKIP) { if (destino.includes(s)) { skip = true; break; } }
-    if (!skip) stats.push(row);
-  }
-
-  return { stats, escala };
-}
-
-// ── FETCH / CICLO DE ATUALIZAÇÃO ─────────────────────────────────────────────
-// MELHORIA 2: usa uma única referência de timer para evitar sobreposição
-function scheduleFetch(delay) {
-  if (fetchTimer) clearTimeout(fetchTimer);
-  fetchTimer = setTimeout(fetchLive, delay);
-}
-
-async function fetchLive() {
-  if (fetchTimer) clearTimeout(fetchTimer);
-  const banner = document.getElementById("banner");
-  banner.style.display = "flex";
-  banner.innerHTML = `<span style="color:var(--accent)">⏳ Atualizando...</span> · Buscando planilha...`;
-  try {
-    const res = await fetch(CSV_URL + "&cachebust=" + Date.now(), { cache: "no-store" });
-    if (!res.ok) throw new Error("HTTP " + res.status);
-    const parsed = parseCSV(await res.text());
-    if (parsed.stats.length < 3) throw new Error("Dados insuficientes — planilha publicada?");
-
-    ALL_ROWS = parsed.stats;
-    ESCALA_ROWS = parsed.escala;
-    retryCount = 0;
-
-    // Mantém cores existentes — só adiciona novos motoristas (evita piscar)
-    const allMots = [...new Set([...ALL_ROWS, ...ESCALA_ROWS].map(r => r.m))].sort();
-    allMots.forEach((m, i) => { if (!MOT_COLORS[m]) MOT_COLORS[m] = COLORS[i % COLORS.length]; });
-
-    if (firstLoad) {
-      document.getElementById("loadingScreen").classList.add("hidden");
-      document.getElementById("mainContent").style.display = "";
-      firstLoad = false;
-    }
-    buildFilters();
-    render();
-
-    nextAt = Date.now() + REFRESH_MS;
-    const tag = document.getElementById("statusTag");
-    tag.className = "tag tag-live";
-    tag.innerHTML = `<span class="live-dot"></span>AO VIVO · ${parsed.stats.length} viagens`;
-    banner.innerHTML =
-      `<span style="color:var(--green)">🟢 Atualizado às ${new Date().toLocaleTimeString("pt-BR")}</span>` +
-      ` · <b style="color:var(--accent)">${parsed.stats.length} viagens</b>` +
-      ` · próx. em <b id="cdSec">${Math.ceil(REFRESH_MS / 1000)}s</b>` +
-      ` &nbsp;<button class="btn" id="btnBannerNow" style="font-size:10px;padding:3px 10px">⟳ Agora</button>`;
-    document.getElementById("btnBannerNow").addEventListener("click", fetchLive);
-    document.getElementById("tsLbl").textContent = "🔄 Dados ao vivo · atualizado às " + new Date().toLocaleTimeString("pt-BR");
-    startCountdown();
-    scheduleFetch(REFRESH_MS);
-
-  } catch(err) {
-    retryCount++;
-    if (firstLoad && ALL_ROWS.length === 0) {
-      document.getElementById("loadingScreen").classList.add("hidden");
-      const es = document.getElementById("errorScreen");
-      es.style.display = "flex";
-      document.getElementById("errorMsg").textContent = err.message;
-      scheduleFetch(RETRY_MS);
-      return;
-    }
-    const delay = retryCount <= MAX_RETRY ? RETRY_MS : REFRESH_MS;
-    nextAt = Date.now() + delay;
-    const tag = document.getElementById("statusTag");
-    tag.className = "tag tag-off";
-    tag.innerHTML = "⚠️ Offline";
-    banner.innerHTML =
-      `<span style="color:var(--gold)">⚠️ Usando dados anteriores</span>` +
-      ` · Erro: ${err.message} · retry em <b id="cdSec">${Math.ceil(delay / 1000)}s</b>` +
-      ` &nbsp;<button class="btn" id="btnBannerRetry" style="font-size:10px;padding:3px 10px">⟳ Tentar</button>`;
-    document.getElementById("btnBannerRetry").addEventListener("click", fetchLive);
-    document.getElementById("tsLbl").textContent = "Dados anteriores · " + new Date().toLocaleTimeString("pt-BR");
-    startCountdown();
-    scheduleFetch(delay);
-  }
-}
-
-function startCountdown() {
-  if (cdTimer) clearInterval(cdTimer);
-  cdTimer = setInterval(() => {
-    if (!nextAt) return;
-    const s = Math.max(0, Math.ceil((nextAt - Date.now()) / 1000));
-    const el = document.getElementById("cdSec");
-    if (el) el.textContent = s + "s";
-    if (s === 0) clearInterval(cdTimer);
-  }, 500);
-}
-
-document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "hidden") {
-    if (cdTimer) clearInterval(cdTimer);
-    if (fetchTimer) clearTimeout(fetchTimer); // pausa busca em segundo plano
-  } else {
-    // Re-fetcha se a próxima atualização já venceu ou está quase vencendo
-    if (nextAt && Date.now() > nextAt - REFRESH_MS / 2) {
-      fetchLive();
-    } else {
-      // Reagenda o timer restante
-      if (nextAt) scheduleFetch(Math.max(0, nextAt - Date.now()));
-    }
-  }
-});
-
-// ── ABAS ─────────────────────────────────────────────────────────────────────
-function switchTab(tab) {
-  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-  document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
-  document.getElementById("tab" + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add("active");
-  document.getElementById("panel" + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add("active");
-}
-document.getElementById("tabEstatisticas").addEventListener("click", () => switchTab("estatisticas"));
-document.getElementById("tabEscala").addEventListener("click", () => switchTab("escala"));
-
-// ── FILTROS ───────────────────────────────────────────────────────────────────
-function getFiltered() {
-  return ALL_ROWS.filter(r =>
-    (selMes.size === 0 || selMes.has(r.mes)) &&
-    (selSem.size === 0 || selSem.has(r.wk))  &&
-    (selMot.size === 0 || selMot.has(r.m))   &&
-    (selVei.size === 0 || selVei.has(r.v))
-  );
-}
-function resetFilters() {
-  selMes = new Set(); selSem = new Set(); selMot = new Set(); selVei = new Set();
-  buildFilters(); render();
-}
-
-// MELHORIA 5: chips usam data-val + addEventListener para evitar XSS com aspas nos nomes
-function buildFilters() {
-  const meses = [...new Set(ALL_ROWS.map(r => r.mes))].sort();
-  const sems  = [...new Set(ALL_ROWS.map(r => r.wk))].sort();
-  const mots  = [...new Set(ALL_ROWS.map(r => r.m))].sort();
-  const veis  = [...new Set(ALL_ROWS.map(r => r.v).filter(v => v && v !== "N/D"))].sort();
-
-  function makeChips(containerId, items, set, cls, colorFn) {
-    const el = document.getElementById(containerId);
-    el.innerHTML = "";
-    items.forEach(val => {
-      const btn = document.createElement("button");
-      btn.className = "chip" + (set.has(val) ? " " + cls : "");
-      btn.textContent = val;
-      btn.dataset.val = val;
-      if (colorFn && set.has(val)) colorFn(btn, val);
-      btn.addEventListener("click", () => {
-        if (set.has(val)) {
-          set.delete(val);
-          btn.className = "chip";
-          btn.removeAttribute("style");
-        } else {
-          set.add(val);
-          btn.className = "chip " + cls;
-          if (colorFn) colorFn(btn, val);
-        }
-        render();
-      });
-      el.appendChild(btn);
-    });
-  }
-
-  makeChips("fMes", meses, selMes, "on", null);
-  makeChips("fSem", sems,  selSem, "on-gold", null);
-  makeChips("fMot", mots,  selMot, "on", (btn, m) => {
-    const c = MOT_COLORS[m];
-    if (c) btn.style.cssText = `border-color:${c};color:${c};background:${c}22`;
-  });
-  makeChips("fVei", veis,  selVei, "on-purple", null);
-}
-
-// ── EXPORTAR CSV ─────────────────────────────────────────────────────────────
-// MELHORIA 7: exporta as linhas filtradas (ou log buscado) como CSV
-function exportCSV(rows, filename) {
-  const header = ["Data","Motorista","Destino","Veiculo","Mes","Semana","Saida","Pacientes","Obs"];
-  const lines = [header.join(";")];
-  rows.forEach(r => {
-    lines.push([r.dt, r.m, r.d, r.v, r.mes, r.wk, r.saida, r.pac, r.obs]
-      .map(v => '"' + String(v || "").replace(/"/g, '""') + '"').join(";"));
-  });
-  const blob = new Blob(["\uFEFF" + lines.join("\n")], { type: "text/csv;charset=utf-8;" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = filename || "gms_export.csv";
-  a.click();
-  URL.revokeObjectURL(a.href);
-}
-
-// ── RENDER ────────────────────────────────────────────────────────────────────
-function render() {
-  const rows = getFiltered();
-  document.getElementById("fResult").innerHTML =
-    `<span style="font-size:26px;font-weight:800;color:var(--accent)">${rows.length}</span>` +
-    ` <span style="font-size:13px;color:var(--muted);font-family:'Barlow',sans-serif;font-weight:400">viagens</span>`;
-
-  // Agrega por motorista
-  const motMap = {};
-  rows.forEach(r => {
-    if (!motMap[r.m]) motMap[r.m] = { name: r.m, color: MOT_COLORS[r.m] || COLORS[0], init: initials(r.m), trips: 0, dests: {}, veis: {}, weeks: {} };
-    motMap[r.m].trips++;
-    motMap[r.m].dests[r.d] = (motMap[r.m].dests[r.d] || 0) + 1;
-    motMap[r.m].veis[r.v]  = (motMap[r.m].veis[r.v]  || 0) + 1;
-    motMap[r.m].weeks[r.wk]= (motMap[r.m].weeks[r.wk]|| 0) + 1;
-  });
-  const list = Object.values(motMap).sort((a, b) => b.trips - a.trips);
-  list.forEach(d => {
-    d.topDest = Object.entries(d.dests).sort((a,b) => b[1]-a[1])[0]?.[0] || "";
-    d.topVei  = Object.entries(d.veis).sort((a,b)  => b[1]-a[1])[0]?.[0] || "";
-  });
-
-  const total = list.reduce((s, d) => s + d.trips, 0);
-  const avg   = list.length ? total / list.length : 0;
-  const max   = list.length ? Math.max(...list.map(d => d.trips)) : 0;
-  const min   = list.length ? Math.min(...list.map(d => d.trips)) : 0;
-  const period = [...selMes].join(", ") || "Todos os meses";
-
-  // MELHORIA 3: índice de equidade mostra N/A com < 3 motoristas
-  const eqEl  = document.getElementById("eqScore");
-  const eqSub = document.getElementById("eqScoreSub");
-  if (list.length < 3) {
-    eqEl.textContent = "N/A";
-    eqEl.className = "eq-score na";
-    eqSub.textContent = list.length < 2 ? "mín. 2 motoristas" : "mín. 3 para comparar";
-  } else {
-    const equity = Math.max(0, Math.round(100 - ((max - min) / Math.max(avg, 1) * 40)));
-    eqEl.textContent = equity;
-    eqEl.className = "eq-score";
-    eqSub.textContent = "/ 100";
-  }
-
-  document.getElementById("kT").textContent = total;
-  document.getElementById("kP").textContent = period;
-  document.getElementById("kA").textContent = Math.round(avg);
-  document.getElementById("kD").textContent = new Set(rows.map(r => r.d)).size;
-  document.getElementById("kTop").textContent = max || "--";
-  document.getElementById("kTopN").textContent = list[0]?.name || "--";
-  document.getElementById("kV").textContent = max - min;
-  document.getElementById("avgLbl").textContent = Math.round(avg);
-  document.getElementById("tblSub").textContent = `${list.length} motoristas · ${period}`;
-  document.getElementById("destSub").textContent = `${new Set(rows.map(r => r.d)).size} destinos`;
-  document.getElementById("veiSub").textContent = `${new Set(rows.map(r => r.v).filter(v => v && v !== "N/D")).size} veículos`;
-  document.getElementById("donutN").textContent = total;
-
-  if (!list.length) {
-    const e = '<tr><td colspan="10" class="empty">Nenhuma viagem encontrada.</td></tr>';
-    ["drvTbody","destTbody","veiTbody","logTbody"].forEach(id => document.getElementById(id).innerHTML = e);
-    document.getElementById("eqGrid").innerHTML   = '<div class="empty">Sem dados.</div>';
-    document.getElementById("heatWrap").innerHTML = '<div class="empty">Sem dados.</div>';
-    document.getElementById("wChart").innerHTML   = "";
-    logRows = [];
-    return;
-  }
-
-  // Ranking
-  document.getElementById("drvTbody").innerHTML = list.map((d, i) => {
-    const diff = Math.round(d.trips - avg);
-    const bdg = diff > 3
-      ? `<span class="bdg bdg-g">+${diff}</span>`
-      : diff < -3
-        ? `<span class="bdg bdg-r">${diff}</span>`
-        : `<span class="bdg bdg-y">≈ média</span>`;
-    return `<tr>
-      <td style="color:var(--muted);font-weight:700;font-size:10px">${i+1}º</td>
-      <td><div class="drv-info">
-        <div class="av" style="background:${d.color}18;color:${d.color};border:1.5px solid ${d.color}50">${esc(d.init)}</div>
-        <div><div class="drv-name">${esc(d.name)}</div><div class="drv-sub">${esc(d.topDest)}</div></div>
-      </div></td>
-      <td><span class="n-big" style="color:${d.color}">${d.trips}</span></td>
-      <td><div class="bar-row"><div class="bar-bg"><div class="bar-fill" style="width:${(d.trips/max*100).toFixed(1)}%;background:${d.color}"></div></div><span class="bar-pct">${(d.trips/total*100).toFixed(1)}%</span></div></td>
-      <td style="font-size:10px;color:var(--muted)">${esc(d.topDest) || "-"}</td>
-      <td style="font-size:10px;color:var(--muted)">${esc(d.topVei)  || "-"}</td>
-      <td>${bdg}</td>
-    </tr>`;
-  }).join("");
-
-  // Donut
-  const svg = document.getElementById("donutSvg");
-  const cx = 70, cy = 70, r = 58, sw = 15, circ = 2 * Math.PI * r;
-  svg.innerHTML = "";
-  const bg = document.createElementNS("http://www.w3.org/2000/svg","circle");
-  bg.setAttribute("cx",cx); bg.setAttribute("cy",cy); bg.setAttribute("r",r);
-  bg.setAttribute("fill","none"); bg.setAttribute("stroke","#e8eef4"); bg.setAttribute("stroke-width",sw);
-  svg.appendChild(bg);
-  let off = 0;
-  list.forEach(d => {
-    const pct = d.trips / total, dash = pct * circ;
-    const c = document.createElementNS("http://www.w3.org/2000/svg","circle");
-    c.setAttribute("cx",cx); c.setAttribute("cy",cy); c.setAttribute("r",r);
-    c.setAttribute("fill","none"); c.setAttribute("stroke",d.color); c.setAttribute("stroke-width",sw);
-    c.setAttribute("stroke-dasharray",`${Math.max(0,dash-1)} ${circ-Math.max(0,dash-1)}`);
-    c.setAttribute("stroke-dashoffset",-off*circ);
-    svg.appendChild(c); off += pct;
-  });
-  document.getElementById("donutLeg").innerHTML = list.slice(0,8).map(d =>
-    `<div class="leg-item"><div class="leg-l"><div class="leg-dot" style="background:${d.color}"></div><span class="leg-n">${esc(d.name.split(" ")[0])}</span></div><div class="leg-r"><span class="leg-pct" style="color:${d.color}">${(d.trips/total*100).toFixed(1)}%</span><span class="leg-t">${d.trips}v</span></div></div>`
-  ).join("");
-
-  // Equidade individual
-  document.getElementById("eqGrid").innerHTML = list.map(d => {
-    const diff = Math.round(d.trips - avg);
-    const cls = diff > 3 ? "up" : diff < -3 ? "dn" : "eq";
-    return `<div class="eq-card">
-      <div class="eq-av" style="background:${d.color}18;color:${d.color};border:1.5px solid ${d.color}50">${esc(d.init)}</div>
-      <div class="eq-trips" style="color:${d.color}">${d.trips}</div>
-      <div class="eq-name">${esc(d.name.split(" ")[0])}</div>
-      <div class="eq-diff ${cls}">${diff > 0 ? "+" : ""}${diff} vs média</div>
-    </div>`;
-  }).join("");
-
-  // Heatmap
-  const dc = {};
-  rows.forEach(r => dc[r.d] = (dc[r.d] || 0) + 1);
-  const topD = Object.entries(dc).sort((a,b) => b[1]-a[1]).slice(0,10).map(e => e[0]);
-  const maxV = Math.max(...list.flatMap(d => topD.map(dest => d.dests[dest] || 0)), 1);
-  let hh = `<div class="heat-hdr">${topD.map(d => `<span title="${esc(d)}">${esc(d.substring(0,5))}</span>`).join("")}</div>`;
-  list.forEach(d => {
-    hh += `<div class="heat-row"><div class="heat-lbl">${esc(d.name.split(" ")[0])}</div>`;
-    topD.forEach(dest => {
-      const v = d.dests[dest] || 0;
-      const alpha = v > 0 ? Math.min(1, .25 + v/maxV*.75) : .08;
-      const bg2 = v > 0 ? `background:${d.color};opacity:${alpha}` : "background:var(--s3)";
-      hh += `<div class="heat-cell" style="${bg2}" onmouseenter="showTip(event,'<b>${esc(d.name)}</b> → ${esc(dest)}<br>${v} viagens')" onmouseleave="hideTip()" onmousemove="moveTip(event)">${v || ""}</div>`;
-    });
-    hh += "</div>";
-  });
-  document.getElementById("heatWrap").innerHTML = hh;
-
-  // Semanal
-  const weeks = [...new Set(rows.map(r => r.wk))].sort();
-  const maxW = Math.max(...list.flatMap(d => weeks.map(w => d.weeks[w] || 0)), 1);
-  document.getElementById("wChart").innerHTML = weeks.map(w => {
-    const bars = list.map(d => {
-      const v = d.weeks[w] || 0;
-      return `<div class="wchart-bar" style="background:${d.color};height:${v?(v/maxW*110).toFixed(1):2}px;opacity:${v?1:.15}" onmouseenter="showTip(event,'<b>${esc(d.name)}</b><br>${w}: <b>${v}</b> viagens')" onmouseleave="hideTip()" onmousemove="moveTip(event)"></div>`;
-    }).join("");
-    return `<div class="wchart-col"><div class="wchart-group">${bars}</div><div class="wchart-lbl">${w}</div></div>`;
-  }).join("");
-  document.getElementById("wLeg").innerHTML = list.map(d =>
-    `<div class="wleg"><div class="wleg-dot" style="background:${d.color}"></div>${esc(d.name.split(" ")[0])}</div>`
-  ).join("");
-
-  // Destinos
-  const dmap = {}, dmot = {};
-  rows.forEach(r => {
-    dmap[r.d] = (dmap[r.d] || 0) + 1;
-    if (!dmot[r.d]) dmot[r.d] = new Set();
-    dmot[r.d].add(r.m.split(" ")[0]);
-  });
-  const dsorted = Object.entries(dmap).sort((a,b) => b[1]-a[1]);
-  const dmaxT = dsorted[0]?.[1] || 1;
-  const dtot  = dsorted.reduce((s,e) => s+e[1], 0);
-  document.getElementById("destTbody").innerHTML = dsorted.map(([d,t]) =>
-    `<tr><td><div class="dest-name">📍 ${esc(d)}</div><div class="dest-who">${[...dmot[d]].map(esc).join(", ")}</div></td>
-    <td style="font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;color:var(--gold)">${t}</td>
-    <td><div class="bar-row"><div class="bar-bg"><div class="bar-fill" style="width:${(t/dmaxT*100).toFixed(1)}%;background:var(--gold)"></div></div><span class="bar-pct">${(t/dtot*100).toFixed(1)}%</span></div></td>
-    <td style="font-size:9px;color:var(--muted)">${[...dmot[d]].slice(0,4).map(esc).join(", ")}</td></tr>`
-  ).join("");
-
-  // Veículos
-  const vc = {}, vm = {};
-  rows.filter(r => r.v && r.v !== "N/D").forEach(r => {
-    vc[r.v] = (vc[r.v] || 0) + 1;
-    if (!vm[r.v]) vm[r.v] = new Set();
-    vm[r.v].add(r.m.split(" ")[0]);
-  });
-  const vsorted = Object.entries(vc).sort((a,b) => b[1]-a[1]);
-  const vmaxT = vsorted[0]?.[1] || 1;
-  const vtot  = vsorted.reduce((s,e) => s+e[1], 0);
-  document.getElementById("veiTbody").innerHTML = vsorted.map(([v,t]) =>
-    `<tr><td><div class="dest-name">🚗 ${esc(v)}</div><div class="dest-who">${[...vm[v]].map(esc).join(", ")}</div></td>
-    <td style="font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;color:var(--purple)">${t}</td>
-    <td><div class="bar-row"><div class="bar-bg"><div class="bar-fill" style="width:${(t/vmaxT*100).toFixed(1)}%;background:var(--purple)"></div></div><span class="bar-pct">${(t/vtot*100).toFixed(1)}%</span></div></td>
-    <td style="font-size:9px;color:var(--muted)">${[...vm[v]].slice(0,3).map(esc).join(", ")}</td></tr>`
-  ).join("");
-
-  // Log
-  logRows = [...rows].sort((a,b) =>
-    b.dt.split("/").reverse().join("").localeCompare(a.dt.split("/").reverse().join(""))
-  );
-  renderLog();
-  renderEscala();
-}
-
-// MELHORIA 6: log com busca em tempo real
-function renderLog() {
-  const q = norm(document.getElementById("logSearch").value || "");
-  const filtered = q
-    ? logRows.filter(r => norm(r.m).includes(q) || norm(r.d).includes(q) || norm(r.v).includes(q) || r.dt.includes(q))
-    : logRows;
-  document.getElementById("logSub").textContent = `${filtered.length} de ${logRows.length} viagens`;
-  document.getElementById("logTbody").innerHTML = filtered.slice(0, 5000).map(r =>
-    `<tr>
-      <td style="color:var(--muted)">${esc(r.dt)}</td>
-      <td><span style="color:${MOT_COLORS[r.m]||'#555'};font-weight:600">${esc(r.m)}</span></td>
-      <td>📍 ${esc(r.d)}</td>
-      <td style="color:var(--muted);font-size:10px">${esc(r.v)}</td>
-      <td><span style="background:#e6f9f2;color:var(--accent);border:1px solid #9adfc5;padding:1px 6px;border-radius:10px;font-size:9px;font-weight:700">${esc(r.mes)}</span></td>
-      <td style="color:var(--muted);font-size:10px">${esc(r.wk)}</td>
-    </tr>`
-  ).join("");
-
-  // Atualiza botão de exportar log com os dados visíveis
-  document.getElementById("btnExportLog").onclick = () =>
-    exportCSV(filtered, `gms_log_${new Date().toISOString().slice(0,10)}.csv`);
-}
-
-// ── RENDER ESCALA DO DIA ──────────────────────────────────────────────────────
-function renderEscala() {
-  const hoje = new Date(); hoje.setHours(0,0,0,0);
-  const hd = ("0" + hoje.getDate()).slice(-2);
-  const hm = ("0" + (hoje.getMonth()+1)).slice(-2);
-  const hy = hoje.getFullYear();
-  const hojeStr = hd + "/" + hm + "/" + hy;
-
-  const rows = ESCALA_ROWS.filter(r => {
-    if (!r.dt || !r.dt.includes("/")) return false;
-    const dp = r.dt.split("/");
-    if (dp.length < 3) return false;
-    const rDate = new Date(parseInt(dp[2]), parseInt(dp[1])-1, parseInt(dp[0]));
-    rDate.setHours(0,0,0,0);
-    return rDate >= hoje;
-  });
-
-  // Proxima data com viagens pendentes
-  const datasOrdenadas = [...new Set(rows.map(r => r.dt))].sort((a,b) =>
-    a.split("/").reverse().join("").localeCompare(b.split("/").reverse().join(""))
-  );
-  const proximaData = datasOrdenadas[0] || hojeStr;
-  const isProximaHoje = proximaData === hojeStr;
-  const rowsProxima = rows.filter(r => r.dt === proximaData);
-
-  // "Em Servico" = motoristas UNICOS na proxima data excluindo dispensas
-  // Conta motoristas, nao linhas — evita mostrar valor maior que total de motoristas
-  const ativasServico = rowsProxima.filter(r => {
-    const du = norm(r.d);
-    for (const s of SKIP_SERVICO) { if (du.includes(norm(s))) return false; }
-    return true;
-  });
-  const motoristasEmServico = new Set(ativasServico.map(r => r.m)).size;
-
-  // Viagens e pacientes da proxima data (exclui rural/hemo/malote/etc)
-  const viagensProxima = rowsProxima.filter(r => {
-    const du = norm(r.d);
-    for (const s of SKIP_KPI) { if (du.includes(norm(s))) return false; }
-    return true;
-  });
-  const pacProxima = viagensProxima.reduce((s, r) => s + (parseInt(r.pac) || 0), 0);
-
-  // Total de motoristas unicos com qualquer viagem pendente no periodo
-  const motoristas = new Set(rows.map(r => r.m)).size;
-
-  // Labels dinamicos
-  const labelViagens = isProximaHoje ? "Viagens Hoje" : `Viagens ${proximaData}`;
-  const labelPac     = isProximaHoje ? "Pacientes Hoje" : `Pacientes ${proximaData}`;
-  document.getElementById("ekDestLbl").textContent = labelViagens;
-  document.getElementById("ekPacLbl").textContent  = labelPac;
-
-  document.getElementById("ekTotal").textContent  = motoristas             || "--";
-  document.getElementById("ekAtivos").textContent = motoristasEmServico    || "--";
-  document.getElementById("ekDest").textContent   = viagensProxima.length  || "--";
-  document.getElementById("ekPac").textContent    = pacProxima             || "--";
-  document.getElementById("escalaCount").textContent =
-    rows.length + " viagem" + (rows.length !== 1 ? "s" : "") + " · a partir de " + hojeStr;
-  document.getElementById("escalaInfo").textContent =
-    "Atualizado às " + new Date().toLocaleTimeString("pt-BR");
-
-  const tbody = document.getElementById("escalaTbody");
-  if (!rows.length) {
-    tbody.innerHTML = `<tr><td colspan="7" style="padding:40px;text-align:center;color:var(--muted)">📭 Nenhuma viagem pendente a partir de ${esc(hojeStr)}</td></tr>`;
-    return;
-  }
-
-  const sorted = rows.slice().sort((a, b) => {
-    const da = a.dt.split("/").reverse().join("");
-    const db = b.dt.split("/").reverse().join("");
-    if (da !== db) return da.localeCompare(db);
-    return (a.saida || "99:99").localeCompare(b.saida || "99:99");
-  });
-
-  const diasSemana = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
-  let html2 = "", lastDt = "";
-
-  sorted.forEach(r => {
-    if (r.dt !== lastDt) {
-      lastDt = r.dt;
-      const dp = r.dt.split("/");
-      const rDate = new Date(parseInt(dp[2]), parseInt(dp[1])-1, parseInt(dp[0]));
-      const isHoje = rDate.getTime() === hoje.getTime();
-      const diasFuturos = Math.round((rDate - hoje) / 864e5);
-      const sufixo = isHoje
-        ? "<span style='color:var(--green);font-weight:800'>● HOJE</span>"
-        : diasFuturos === 1
-          ? "<span style='color:var(--muted)'>· amanhã</span>"
-          : `<span style='color:var(--muted)'>· em ${diasFuturos} dias</span>`;
-      const corData = isHoje ? "var(--green)" : "#1a5fa8";
-      html2 += `<tr class='row-sep'><td colspan='7'><span style='color:${corData};font-weight:700'>${diasSemana[rDate.getDay()]} · ${esc(r.dt)}</span> ${sufixo}</td></tr>`;
-    }
-
-    const cor = MOT_COLORS[r.m] || "#555";
-    const pts = r.m.split(" ");
-    const ini = pts.length >= 2 ? pts[0][0] + pts[1][0] : r.m.substring(0,2);
-
-    const veiCell = r.v
-      ? `<span class="vei-badge">${esc(r.v)}</span>`
-      : `<span style="color:var(--muted)">—</span>`;
-
-    const DU = norm(r.d);
-    let destCell;
-    if      (DU.includes("FERIAS") || DU.includes("RECESSO"))   destCell = `<span class="dest-ferias">🏖️ ${esc(r.d)}</span>`;
-    else if (DU.includes("RURAL"))                               destCell = `<span class="dest-rural">🌾 ${esc(r.d)}</span>`;
-    else if (DU.includes("HEMODIALISE") || DU.includes("HEMO")) destCell = `<span class="dest-hemo">🏥 ${esc(r.d)}</span>`;
-    else if (DU.includes("MALOTE"))                              destCell = `<span class="dest-malote">📦 ${esc(r.d)}</span>`;
-    else if (DU.includes("DISPONIVEL"))                          destCell = `<span class="dest-disp">✅ DISPONIVEL</span>`;
-    else                                                          destCell = `<b class="dest-val">${esc(r.d)}</b>`;
-
-    const saidaCell = r.saida ? `<span class="saida-val">${esc(r.saida)}</span>` : `<span style="color:var(--muted)">—</span>`;
-    const pacCell   = r.pac   ? `<span class="pac-val">${esc(r.pac)}</span>`     : `<span style="color:var(--muted)">—</span>`;
-    const obsCell   = r.obs   ? `<span class="obs-val">${esc(r.obs)}</span>`     : "";
-
-    html2 += `<tr>
-      <td><span class="escala-data">${esc(r.dt)}</span></td>
-      <td><div class="mot-cell">
-        <div class="mot-av" style="background:${cor}18;color:${cor};border:1.5px solid ${cor}50">${esc(ini)}</div>
-        <span class="mot-nome" style="color:${cor}">${esc(r.m)}</span>
-      </div></td>
-      <td>${veiCell}</td>
-      <td>${destCell}</td>
-      <td>${saidaCell}</td>
-      <td>${pacCell}</td>
-      <td>${obsCell}</td>
-    </tr>`;
-  });
-  tbody.innerHTML = html2;
-}
-
-// ── TOOLTIP ───────────────────────────────────────────────────────────────────
-const tip = document.getElementById("tip");
-function showTip(e, h) { tip.innerHTML = h; tip.style.display = "block"; moveTip(e); }
-function moveTip(e) { tip.style.left = (e.clientX+14)+"px"; tip.style.top = (e.clientY-10)+"px"; }
-function hideTip() { tip.style.display = "none"; }
-
-// ── EVENTOS GLOBAIS ───────────────────────────────────────────────────────────
-document.getElementById("btnResetFilters").addEventListener("click", resetFilters);
-document.getElementById("btnRefresh").addEventListener("click", fetchLive);
-document.getElementById("btnRetryErr").addEventListener("click", fetchLive);
-document.getElementById("btnExportCSV").addEventListener("click", () =>
-  exportCSV(getFiltered(), `gms_filtrado_${new Date().toISOString().slice(0,10)}.csv`)
-);
-document.getElementById("logSearch").addEventListener("input", renderLog);
-
-// ── INIT ──────────────────────────────────────────────────────────────────────
-fetchLive();
-</script>
+<!-- ══ SCRIPTS — config primeiro, depois a lógica ══ -->
+<script src="/TESTE/js/config.js"></script>
+<script src="/TESTE/js/app.js"></script>
 </body>
 </html>
